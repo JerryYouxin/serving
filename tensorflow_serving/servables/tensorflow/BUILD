@@ -480,7 +480,7 @@ cc_library(
 
 cc_library(
     name = "predict_util",
-    srcs = ["predict_util.cc"],
+    srcs = ["predict_util.cc", "tracer.h"],
     hdrs = ["predict_util.h"],
     visibility = [
         "//visibility:public",

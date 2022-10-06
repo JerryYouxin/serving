@@ -201,7 +201,15 @@ int main(int argc, char** argv) {
                        "SavedModel directory instead of the TensorFlow model "
                        "from `saved_model.pb` file."),
       tensorflow::Flag("use_multi_stream", &options.use_multi_stream,
-                        "Use multi-stream or not in session_group")};
+                        "Use multi-stream or not in session_group"),
+      tensorflow::Flag("timeline_start_step", &options.timeline_start_step,
+                       "The start step of collecting serving timelines."),
+      tensorflow::Flag("timeline_interval_step", &options.timeline_interval_step,
+                       "The interval step of collecting serving timelines."),
+      tensorflow::Flag("timeline_tracing_count", &options.timeline_tracing_count,
+                       "The number of collecting timeline traces."),
+      tensorflow::Flag("timeline_path", &options.timeline_path,
+                       "The directory path of collected timelines.")};
 
   const auto& usage = tensorflow::Flags::Usage(argv[0], flag_list);
   if (!tensorflow::Flags::Parse(&argc, argv, flag_list)) {

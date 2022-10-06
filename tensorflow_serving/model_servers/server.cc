@@ -49,6 +49,7 @@ limitations under the License.
 #include "tensorflow_serving/model_servers/platform_config_util.h"
 #include "tensorflow_serving/model_servers/server_core.h"
 #include "tensorflow_serving/servables/tensorflow/session_bundle_config.pb.h"
+#include "tensorflow_serving/servables/tensorflow/tracer.h"
 
 namespace tensorflow {
 namespace serving {
@@ -358,6 +359,15 @@ Status Server::BuildAndStart(const Options& server_options) {
     return errors::InvalidArgument(
         "Both server_options.model_base_path and "
         "server_options.model_config_file are empty!");
+  }
+
+  if (server_options.timeline_tracing_count > 0) {
+    tensorflow::serving::Tracer::GetTracer()->SetParams(
+      server_options.timeline_start_step,
+      server_options.timeline_interval_step,
+      server_options.timeline_tracing_count,
+      server_options.timeline_path);
+    LOG(INFO) << "Collecting timeline: " << server_options.timeline_start_step << ", " << server_options.timeline_interval_step << "," <<  server_options.timeline_tracing_count << " at " << server_options.timeline_path;
   }
 
   // For ServerCore Options, we leave servable_state_monitor_creator unspecified

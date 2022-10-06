@@ -29,6 +29,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/errors.h"
 #include "tensorflow/core/protobuf/named_tensor.pb.h"
 #include "tensorflow_serving/servables/tensorflow/util.h"
+#include "tensorflow_serving/servables/tensorflow/tracer.h"
 
 namespace tensorflow {
 namespace serving {
@@ -207,9 +208,18 @@ Status RunPredict(
                                           &output_tensor_aliases));
   std::vector<Tensor> outputs;
   RunMetadata run_metadata;
-  TF_RETURN_IF_ERROR(session->Run(run_options, input_tensors,
-                                  output_tensor_names, {}, &outputs,
-                                  &run_metadata));
+  if (Tracer::GetTracer()->NeedTracing()) {
+    tensorflow::RunOptions run_options_trace = run_options;
+    run_options_trace.set_trace_level(RunOptions::FULL_TRACE);
+    TF_RETURN_IF_ERROR(session->Run(run_options_trace, input_tensors,
+                                    output_tensor_names, {}, &outputs,
+                                    &run_metadata));
+    Tracer::GetTracer()->GenTimeline(run_metadata);
+  } else {
+    TF_RETURN_IF_ERROR(session->Run(run_options, input_tensors,
+                                    output_tensor_names, {}, &outputs,
+                                    &run_metadata));
+  }
 
   return PostProcessPredictionResult(output_tensor_aliases, outputs, option,
                                      response);

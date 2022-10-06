@@ -89,6 +89,12 @@ class Server {
     tensorflow::int32 session_num_per_group = 0;
     bool use_multi_stream = false;
 
+    // For timeline collection
+    tensorflow::int32 timeline_start_step = 0;
+    tensorflow::int32 timeline_interval_step = 1;
+    tensorflow::int32 timeline_tracing_count = 0;
+    tensorflow::string timeline_path;
+
     Options();
   };
 
