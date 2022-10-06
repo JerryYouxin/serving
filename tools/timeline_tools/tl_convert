@@ -1,0 +1,4 @@
+#!/bin/bash
+ROOT_DIR=`dirname $0`
+echo Running timeline generator in: $ROOT_DIR
+python $ROOT_DIR/gen_timeline.py ${1} ${1}.json
