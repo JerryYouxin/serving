@@ -209,7 +209,13 @@ int main(int argc, char** argv) {
       tensorflow::Flag("timeline_tracing_count", &options.timeline_tracing_count,
                        "The number of collecting timeline traces."),
       tensorflow::Flag("timeline_path", &options.timeline_path,
-                       "The directory path of collected timelines.")};
+                       "The directory path of collected timelines."),
+      tensorflow::Flag("timer_start", &options.timer_start,
+                       "The start step of collecting timer profiles."),
+      tensorflow::Flag("timer_count", &options.timer_count,
+                       "The number of collected timer profiles."),
+      tensorflow::Flag("timer_path", &options.timer_path,
+                       "The result file path for profiled timer statistics.")};
 
   const auto& usage = tensorflow::Flags::Usage(argv[0], flag_list);
   if (!tensorflow::Flags::Parse(&argc, argv, flag_list)) {

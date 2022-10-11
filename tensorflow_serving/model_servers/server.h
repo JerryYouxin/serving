@@ -95,6 +95,11 @@ class Server {
     tensorflow::int32 timeline_tracing_count = 0;
     tensorflow::string timeline_path;
 
+    // For timer collection
+    tensorflow::int32 timer_start = 0;
+    tensorflow::int32 timer_count = 0;
+    tensorflow::string timer_path;
+
     Options();
   };
 

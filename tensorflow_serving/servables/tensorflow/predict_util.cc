@@ -216,9 +216,17 @@ Status RunPredict(
                                     &run_metadata));
     Tracer::GetTracer()->GenTimeline(run_metadata);
   } else {
-    TF_RETURN_IF_ERROR(session->Run(run_options, input_tensors,
+    if(Timer::GetTimer()->IsEnabled()) {
+      auto ts = Timer::GetTimer()->Start();
+      TF_RETURN_IF_ERROR(session->Run(run_options, input_tensors,
                                     output_tensor_names, {}, &outputs,
                                     &run_metadata));
+      Timer::GetTimer()->Stop(ts);
+    } else {
+      TF_RETURN_IF_ERROR(session->Run(run_options, input_tensors,
+                                      output_tensor_names, {}, &outputs,
+                                      &run_metadata));
+    }
   }
 
   return PostProcessPredictionResult(output_tensor_aliases, outputs, option,

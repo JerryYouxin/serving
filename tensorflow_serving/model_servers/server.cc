@@ -370,6 +370,14 @@ Status Server::BuildAndStart(const Options& server_options) {
     LOG(INFO) << "Collecting timeline: " << server_options.timeline_start_step << ", " << server_options.timeline_interval_step << "," <<  server_options.timeline_tracing_count << " at " << server_options.timeline_path;
   }
 
+  if (server_options.timer_count > 0) {
+    tensorflow::serving::Timer::GetTimer()->Enable(
+      server_options.timer_start,
+      server_options.timer_count,
+      server_options.timer_path);
+    LOG(INFO) << "Collecting timer: " << server_options.timer_start << ", " << server_options.timer_count << ", profile data location: " << server_options.timer_path;
+  }
+
   // For ServerCore Options, we leave servable_state_monitor_creator unspecified
   // so the default servable_state_monitor_creator will be used.
   ServerCore::Options options;
